@@ -1,1 +1,1603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asher#dino — VALORANT Player Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --valo-red: #ff4655;
+    --valo-red-glow: rgba(255,70,85,0.4);
+    --valo-red-dim: rgba(255,70,85,0.15);
+    --valo-white: #ece8e1;
+    --valo-gold: #c89b3c;
+    --valo-blue: #0f1923;
+    --valo-dark: #0a0f14;
+    --valo-mid: #111b24;
+    --valo-panel: #0d1923;
+    --valo-border: rgba(255,70,85,0.25);
+    --valo-text: #bdc3c7;
+    --valo-cyan: #00d4ff;
+    --neon-glow: 0 0 10px var(--valo-red-glow), 0 0 30px var(--valo-red-glow), 0 0 60px rgba(255,70,85,0.2);
+  }
 
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--valo-dark);
+    color: var(--valo-white);
+    font-family: 'Rajdhani', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 14px; height: 14px;
+    border: 2px solid var(--valo-red);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.08s ease, border-color 0.2s;
+    mix-blend-mode: difference;
+  }
+  .cursor-dot {
+    width: 4px; height: 4px;
+    background: var(--valo-red);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%,-50%);
+  }
+  .cursor.hover { transform: translate(-50%,-50%) scale(2.5); border-color: var(--valo-white); }
+
+  /* Grid noise overlay */
+  body::before {
+    content:'';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(255,70,85,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,70,85,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Scanline */
+  body::after {
+    content:'';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.06) 2px,
+      rgba(0,0,0,0.06) 4px
+    );
+    pointer-events: none;
+    z-index: 1;
+    animation: scanMove 8s linear infinite;
+  }
+  @keyframes scanMove {
+    from { background-position: 0 0; }
+    to { background-position: 0 100vh; }
+  }
+
+  /* ---- NAV ---- */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 60px;
+    background: linear-gradient(180deg, rgba(10,15,20,0.97) 0%, transparent 100%);
+    border-bottom: 1px solid var(--valo-border);
+    backdrop-filter: blur(4px);
+  }
+  .nav-logo {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 1.1rem;
+    letter-spacing: 0.3em;
+    color: var(--valo-red);
+    text-transform: uppercase;
+    text-shadow: var(--neon-glow);
+    position: relative;
+  }
+  .nav-logo::before {
+    content: '//';
+    color: rgba(255,70,85,0.4);
+    margin-right: 8px;
+    font-size: 0.8em;
+  }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: var(--valo-text);
+    text-decoration: none;
+    text-transform: uppercase;
+    position: relative;
+    transition: color 0.2s;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0;
+    width: 0; height: 1px;
+    background: var(--valo-red);
+    transition: width 0.3s;
+    box-shadow: 0 0 8px var(--valo-red);
+  }
+  .nav-links a:hover { color: var(--valo-white); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* ---- HERO ---- */
+  #hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding: 0 60px;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 80% 60% at 70% 50%, rgba(255,70,85,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 80%, rgba(255,70,85,0.04) 0%, transparent 60%),
+      linear-gradient(135deg, #0a0f14 0%, #0d1923 50%, #0a0f14 100%);
+    z-index: 0;
+  }
+
+  .hero-hex-grid {
+    position: absolute;
+    right: -100px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 700px;
+    height: 700px;
+    opacity: 0.06;
+    z-index: 0;
+    animation: hexSpin 30s linear infinite;
+  }
+  @keyframes hexSpin { to { transform: translateY(-50%) rotate(360deg); } }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 680px;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--valo-red);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    animation: fadeInUp 0.8s ease both;
+  }
+  .hero-tag::before {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--valo-red);
+    box-shadow: 0 0 8px var(--valo-red);
+  }
+
+  .hero-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(3.5rem, 8vw, 6.5rem);
+    font-weight: 900;
+    line-height: 0.95;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    animation: fadeInUp 0.9s ease 0.1s both;
+  }
+  .hero-name .name-main { 
+    display: block; 
+    color: var(--valo-white);
+    text-shadow: 0 0 40px rgba(255,255,255,0.1);
+  }
+  .hero-name .name-tag {
+    display: block;
+    color: var(--valo-red);
+    text-shadow: var(--neon-glow);
+    font-size: 0.55em;
+    letter-spacing: 0.1em;
+  }
+
+  .hero-subtitle {
+    margin-top: 24px;
+    font-size: 1.05rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    color: var(--valo-text);
+    text-transform: uppercase;
+    animation: fadeInUp 1s ease 0.2s both;
+  }
+
+  .hero-stats-row {
+    display: flex;
+    gap: 0;
+    margin-top: 44px;
+    animation: fadeInUp 1.1s ease 0.3s both;
+  }
+  .hero-stat {
+    padding: 20px 28px;
+    border: 1px solid var(--valo-border);
+    border-right: none;
+    position: relative;
+    transition: background 0.3s, border-color 0.3s;
+    cursor: default;
+  }
+  .hero-stat:first-child { border-left: 2px solid var(--valo-red); }
+  .hero-stat:last-child { border-right: 1px solid var(--valo-border); }
+  .hero-stat:hover { background: var(--valo-red-dim); border-color: var(--valo-red); }
+  .hero-stat:hover .stat-val { color: var(--valo-red); text-shadow: var(--neon-glow); }
+  .stat-val {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--valo-white);
+    transition: color 0.3s, text-shadow 0.3s;
+    display: block;
+  }
+  .stat-lbl {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: rgba(189,195,199,0.6);
+    text-transform: uppercase;
+    margin-top: 2px;
+    display: block;
+  }
+
+  .hero-cta {
+    margin-top: 40px;
+    display: flex;
+    gap: 16px;
+    animation: fadeInUp 1.2s ease 0.4s both;
+  }
+  .btn {
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    padding: 14px 36px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary {
+    background: var(--valo-red);
+    color: var(--valo-white);
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  }
+  .btn-primary::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: white;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .btn-primary:hover::after { opacity: 0.15; }
+  .btn-primary:hover { box-shadow: 0 0 30px var(--valo-red-glow); transform: translateY(-2px); }
+  .btn-outline {
+    background: transparent;
+    color: var(--valo-white);
+    border: 1px solid rgba(255,255,255,0.2);
+    clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  }
+  .btn-outline:hover { border-color: var(--valo-red); color: var(--valo-red); transform: translateY(-2px); }
+
+  /* ---- AGENT CARD (right side) ---- */
+  .hero-agent {
+    position: absolute;
+    right: 60px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    animation: fadeInRight 1s ease 0.5s both;
+  }
+  .agent-card {
+    width: 320px;
+    border: 1px solid var(--valo-border);
+    background: linear-gradient(135deg, rgba(13,25,35,0.9), rgba(10,15,20,0.95));
+    position: relative;
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+    backdrop-filter: blur(20px);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .agent-card:hover {
+    transform: translateY(-8px) rotateY(-4deg);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 40px var(--valo-red-glow);
+  }
+  .agent-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--valo-red), transparent);
+  }
+  .agent-portrait {
+    width: 100%;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(ellipse at center, rgba(255,70,85,0.08) 0%, transparent 70%);
+  }
+  .agent-svg {
+    width: 200px;
+    height: 200px;
+    filter: drop-shadow(0 0 20px rgba(255,70,85,0.3));
+    animation: agentFloat 4s ease-in-out infinite;
+  }
+  @keyframes agentFloat {
+    0%,100% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
+  }
+  .agent-meta {
+    padding: 16px 20px 20px;
+    border-top: 1px solid var(--valo-border);
+  }
+  .agent-name-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .agent-name-label {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--valo-white);
+    letter-spacing: 0.1em;
+  }
+  .agent-role {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--valo-red);
+    letter-spacing: 0.15em;
+    background: var(--valo-red-dim);
+    border: 1px solid rgba(255,70,85,0.3);
+    padding: 3px 10px;
+    text-transform: uppercase;
+  }
+  .agent-abilities {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .ability-chip {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--valo-text);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 4px 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .ability-chip:hover {
+    background: var(--valo-red-dim);
+    border-color: rgba(255,70,85,0.4);
+    color: var(--valo-red);
+  }
+
+  /* corner decorations */
+  .corner-tl, .corner-br {
+    position: absolute;
+    width: 12px; height: 12px;
+  }
+  .corner-tl { top: 8px; left: 8px; border-top: 1px solid var(--valo-red); border-left: 1px solid var(--valo-red); }
+  .corner-br { bottom: 8px; right: 8px; border-bottom: 1px solid var(--valo-red); border-right: 1px solid var(--valo-red); }
+
+  /* ---- SECTIONS common ---- */
+  section {
+    position: relative;
+    z-index: 2;
+    padding: 100px 60px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 60px;
+  }
+  .section-number {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--valo-red);
+    letter-spacing: 0.2em;
+  }
+  .section-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--valo-white);
+  }
+  .section-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--valo-border), transparent);
+  }
+
+  /* ---- PHYSIOLOGY ---- */
+  #physiology { background: var(--valo-mid); }
+
+  .physio-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .physio-card {
+    background: var(--valo-panel);
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s, background 0.3s;
+    border: 1px solid transparent;
+  }
+  .physio-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,70,85,0.05), transparent);
+    transition: left 0.6s ease;
+  }
+  .physio-card:hover::before { left: 150%; }
+  .physio-card:hover {
+    background: #0f1e2a;
+    border-color: var(--valo-border);
+    transform: scale(1.01);
+  }
+  .physio-icon {
+    width: 48px; height: 48px;
+    margin-bottom: 16px;
+    color: var(--valo-red);
+    filter: drop-shadow(0 0 8px rgba(255,70,85,0.4));
+    transition: filter 0.3s;
+  }
+  .physio-card:hover .physio-icon { filter: drop-shadow(0 0 16px rgba(255,70,85,0.7)); }
+  .physio-card-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--valo-red);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .physio-card-value {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--valo-white);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .physio-card-desc {
+    font-size: 0.9rem;
+    color: var(--valo-text);
+    line-height: 1.6;
+    font-weight: 400;
+  }
+  .physio-card.full-width { grid-column: 1 / -1; }
+
+  /* Body diagram card */
+  .physio-body-card {
+    grid-column: 1 / -1;
+    background: var(--valo-panel);
+    border: 1px solid var(--valo-border);
+    padding: 40px;
+    display: flex;
+    gap: 60px;
+    align-items: center;
+    margin-bottom: 2px;
+    transition: box-shadow 0.3s;
+  }
+  .physio-body-card:hover { box-shadow: inset 0 0 60px rgba(255,70,85,0.04); }
+  .body-diagram {
+    flex-shrink: 0;
+    position: relative;
+    width: 200px;
+  }
+  .body-stats-list { flex: 1; }
+  .body-stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: padding 0.2s;
+  }
+  .body-stat-item:last-child { border-bottom: none; }
+  .body-stat-item:hover { padding-left: 12px; }
+  .body-stat-item:hover .bsi-name { color: var(--valo-white); }
+  .bsi-name {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--valo-text);
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .bsi-val {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--valo-white);
+  }
+  .bsi-bar {
+    width: 120px;
+    height: 3px;
+    background: rgba(255,255,255,0.06);
+    position: relative;
+    overflow: hidden;
+  }
+  .bsi-bar-fill {
+    height: 100%;
+    background: var(--valo-red);
+    box-shadow: 0 0 6px var(--valo-red);
+    width: 0;
+    transition: width 1.2s cubic-bezier(0.16,1,0.3,1);
+  }
+
+  /* ---- PERFORMANCE STATS ---- */
+  #stats { background: var(--valo-dark); }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: rgba(255,70,85,0.08);
+    border: 1px solid var(--valo-border);
+    margin-bottom: 40px;
+  }
+  .perf-stat {
+    background: var(--valo-dark);
+    padding: 28px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+  }
+  .perf-stat::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--valo-red);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: left;
+  }
+  .perf-stat:hover { background: var(--valo-mid); }
+  .perf-stat:hover::after { transform: scaleX(1); }
+  .perf-stat:hover .perf-val { color: var(--valo-red); text-shadow: var(--neon-glow); }
+  .perf-val {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--valo-white);
+    transition: color 0.2s, text-shadow 0.2s;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .perf-lbl {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: rgba(189,195,199,0.5);
+    text-transform: uppercase;
+    display: block;
+  }
+
+  /* Recent matches */
+  .matches-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .matches-table th {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--valo-red);
+    text-transform: uppercase;
+    padding: 12px 20px;
+    text-align: left;
+    border-bottom: 1px solid var(--valo-border);
+    background: rgba(255,70,85,0.04);
+  }
+  .matches-table td {
+    padding: 16px 20px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--valo-text);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: all 0.2s;
+  }
+  .matches-table tr {
+    transition: background 0.2s;
+  }
+  .matches-table tr:hover td { background: rgba(255,70,85,0.04); color: var(--valo-white); }
+  .match-result-w { color: #4ade80; font-weight: 700; font-family: 'Orbitron', sans-serif; font-size: 0.75rem; }
+  .match-result-l { color: var(--valo-red); font-weight: 700; font-family: 'Orbitron', sans-serif; font-size: 0.75rem; }
+  .match-agent-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 3px 10px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    transition: all 0.2s;
+  }
+  tr:hover .match-agent-badge { background: var(--valo-red-dim); border-color: rgba(255,70,85,0.3); }
+
+  /* ---- SKILLS section ---- */
+  #skills { background: var(--valo-mid); }
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  .skill-card {
+    background: var(--valo-panel);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    cursor: default;
+  }
+  .skill-card::before {
+    content: attr(data-key);
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: rgba(255,70,85,0.06);
+    letter-spacing: 0.1em;
+    transition: color 0.3s, font-size 0.3s;
+  }
+  .skill-card:hover { border-color: var(--valo-border); box-shadow: 0 0 30px rgba(255,70,85,0.08), inset 0 0 30px rgba(255,70,85,0.03); transform: translateY(-4px); }
+  .skill-card:hover::before { color: rgba(255,70,85,0.12); }
+  .skill-key {
+    display: inline-block;
+    background: var(--valo-red);
+    color: var(--valo-white);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    letter-spacing: 0.15em;
+    margin-bottom: 16px;
+    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  }
+  .skill-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--valo-white);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .skill-desc {
+    font-size: 0.9rem;
+    color: var(--valo-text);
+    line-height: 1.7;
+  }
+  .skill-meter {
+    margin-top: 16px;
+    height: 2px;
+    background: rgba(255,255,255,0.06);
+    position: relative;
+  }
+  .skill-meter-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--valo-red), rgba(255,70,85,0.3));
+    box-shadow: 0 0 8px var(--valo-red-glow);
+    width: 0;
+    transition: width 1.5s cubic-bezier(0.16,1,0.3,1);
+  }
+
+  /* ---- ACHIEVEMENT BANNER ---- */
+  #achievements { background: var(--valo-dark); }
+  .achievement-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .achievement-item {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    background: var(--valo-panel);
+    border: 1px solid transparent;
+    padding: 20px 28px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .achievement-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: var(--valo-gold);
+    transform: scaleY(0);
+    transition: transform 0.3s;
+    transform-origin: top;
+  }
+  .achievement-item:hover { border-color: rgba(200,155,60,0.2); background: rgba(200,155,60,0.04); }
+  .achievement-item:hover::before { transform: scaleY(1); }
+  .ach-icon {
+    width: 44px; height: 44px;
+    background: rgba(200,155,60,0.1);
+    border: 1px solid rgba(200,155,60,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    transition: background 0.3s;
+  }
+  .achievement-item:hover .ach-icon { background: rgba(200,155,60,0.18); }
+  .ach-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--valo-white);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .ach-desc {
+    font-size: 0.85rem;
+    color: var(--valo-text);
+    margin-top: 2px;
+  }
+  .ach-date {
+    margin-left: auto;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--valo-gold);
+    letter-spacing: 0.1em;
+    flex-shrink: 0;
+  }
+
+  /* ---- FOOTER ---- */
+  footer {
+    position: relative;
+    z-index: 2;
+    background: #060b0f;
+    border-top: 1px solid var(--valo-border);
+    padding: 40px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 900;
+    color: var(--valo-red);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+  .footer-copy {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(189,195,199,0.3);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .footer-links {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+  }
+  .footer-links a {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(189,195,199,0.4);
+    text-decoration: none;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--valo-red); }
+
+  /* ---- RANK BADGE ---- */
+  .rank-badge {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, rgba(255,70,85,0.1), rgba(255,70,85,0.04));
+    border: 1px solid var(--valo-border);
+    padding: 16px 24px;
+    margin-top: 28px;
+    transition: all 0.3s;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    cursor: default;
+    animation: fadeInUp 1.3s ease 0.5s both;
+  }
+  .rank-badge:hover { box-shadow: 0 0 30px var(--valo-red-glow); border-color: var(--valo-red); }
+  .rank-badge:hover .rank-label { color: var(--valo-red); }
+  .rank-stars { color: var(--valo-gold); font-size: 0.7rem; letter-spacing: 6px; }
+  .rank-label {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    color: var(--valo-white);
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .rank-tier {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--valo-text);
+    letter-spacing: 0.15em;
+  }
+
+  /* ---- ANIMATIONS ---- */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeInRight {
+    from { opacity: 0; transform: translate(40px, -50%); }
+    to { opacity: 1; transform: translate(0, -50%); }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* Blinking cursor */
+  .blink {
+    animation: blink 1s step-end infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* Agent SVG styles */
+  .agent-neon-dino {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Scroll indicator */
+  .scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    animation: fadeInUp 1.5s ease 1s both;
+    z-index: 2;
+  }
+  .scroll-text {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.6rem;
+    color: rgba(255,70,85,0.5);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(180deg, rgba(255,70,85,0.5), transparent);
+    animation: scrollPulse 1.5s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0%,100% { opacity: 0.5; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.3); }
+  }
+
+  /* Tooltip */
+  [data-tip] {
+    position: relative;
+  }
+  [data-tip]::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background: #0d1923;
+    border: 1px solid var(--valo-border);
+    color: var(--valo-text);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    padding: 6px 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, transform 0.2s;
+    z-index: 10;
+  }
+  [data-tip]:hover::after { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* Loading flash */
+  .page-flash {
+    position: fixed;
+    inset: 0;
+    background: var(--valo-red);
+    z-index: 9998;
+    animation: flashOut 0.6s ease forwards;
+    pointer-events: none;
+  }
+  @keyframes flashOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; pointer-events: none; }
+  }
+
+  @media(max-width:900px){
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    section { padding: 70px 24px; }
+    #hero { padding: 0 24px; }
+    .hero-agent { display: none; }
+    .physio-grid { grid-template-columns: 1fr; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2,1fr); }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+    .hero-stats-row { flex-wrap: wrap; }
+    .hero-stat:last-child { border-right: none; }
+    .physio-body-card { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Flash effect on load -->
+<div class="page-flash"></div>
+
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Asher//dino</div>
+  <ul class="nav-links">
+    <li><a href="#hero">Profile</a></li>
+    <li><a href="#physiology">Physiology</a></li>
+    <li><a href="#stats">Stats</a></li>
+    <li><a href="#skills">Abilities</a></li>
+    <li><a href="#achievements">Achievements</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+
+  <!-- Hex grid BG -->
+  <svg class="hero-hex-grid" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="hex" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse">
+        <polygon points="30,2 58,17 58,47 30,52 2,37 2,17" fill="none" stroke="#ff4655" stroke-width="0.5"/>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#hex)"/>
+  </svg>
+
+  <div class="hero-content">
+    <div class="hero-tag">VALORANT PLAYER PROFILE</div>
+
+    <h1 class="hero-name">
+      <span class="name-main">Asher</span>
+      <span class="name-tag">#dino</span>
+    </h1>
+
+    <p class="hero-subtitle">Duelist · Entry Fragger · NA Server</p>
+
+    <div class="hero-stats-row">
+      <div class="hero-stat" data-tip="Average Combat Score">
+        <span class="stat-val">218</span>
+        <span class="stat-lbl">ACS</span>
+      </div>
+      <div class="hero-stat" data-tip="Kill / Death Ratio">
+        <span class="stat-val">1.08</span>
+        <span class="stat-lbl">K/D</span>
+      </div>
+      <div class="hero-stat" data-tip="Average Damage per Round">
+        <span class="stat-val">148</span>
+        <span class="stat-lbl">ADR</span>
+      </div>
+      <div class="hero-stat" data-tip="Kill/Assist/Survive/Trade %">
+        <span class="stat-val">71%</span>
+        <span class="stat-lbl">KAST</span>
+      </div>
+    </div>
+
+    <div class="rank-badge">
+      <span class="rank-stars">★ ★ ★</span>
+      <span class="rank-label">Diamond II</span>
+      <span class="rank-tier">COMPETITIVE RANK</span>
+    </div>
+
+    <div class="hero-cta">
+      <a href="#stats" class="btn btn-primary">↓ View Stats</a>
+      <a href="#physiology" class="btn btn-outline">Physiology</a>
+    </div>
+  </div>
+
+  <!-- Agent Card -->
+  <div class="hero-agent">
+    <div class="agent-card">
+      <div class="corner-tl"></div>
+      <div class="corner-br"></div>
+      <div class="agent-portrait">
+        <!-- Custom Neon Agent SVG -->
+        <svg class="agent-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="bodyGrad" cx="50%" cy="40%" r="55%">
+              <stop offset="0%" stop-color="#ff6b7a"/>
+              <stop offset="100%" stop-color="#cc2233"/>
+            </radialGradient>
+            <filter id="glowFilter">
+              <feGaussianBlur stdDeviation="3" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <!-- Body glow -->
+          <ellipse cx="100" cy="160" rx="45" ry="8" fill="rgba(255,70,85,0.2)"/>
+          <!-- Legs -->
+          <rect x="82" y="130" width="14" height="36" rx="4" fill="#cc2233"/>
+          <rect x="104" y="130" width="14" height="36" rx="4" fill="#cc2233"/>
+          <!-- Body -->
+          <rect x="72" y="72" width="56" height="62" rx="8" fill="url(#bodyGrad)" filter="url(#glowFilter)"/>
+          <!-- Arms -->
+          <rect x="44" y="74" width="28" height="12" rx="5" fill="#cc2233" transform="rotate(-12 58 80)"/>
+          <rect x="128" y="74" width="28" height="12" rx="5" fill="#cc2233" transform="rotate(12 142 80)"/>
+          <!-- Gun (right hand) -->
+          <rect x="148" y="78" width="20" height="6" rx="2" fill="#4a4a5a"/>
+          <rect x="162" y="76" width="10" height="4" rx="1" fill="#3a3a4a"/>
+          <!-- Head -->
+          <circle cx="100" cy="54" r="24" fill="url(#bodyGrad)" filter="url(#glowFilter)"/>
+          <!-- Helmet visor -->
+          <ellipse cx="100" cy="52" rx="16" ry="10" fill="#0d1923" opacity="0.8"/>
+          <ellipse cx="100" cy="52" rx="13" ry="8" fill="#00d4ff" opacity="0.2"/>
+          <!-- Eyes glow -->
+          <circle cx="93" cy="51" r="3" fill="#ff4655"/>
+          <circle cx="107" cy="51" r="3" fill="#ff4655"/>
+          <circle cx="93" cy="51" r="1.5" fill="white"/>
+          <circle cx="107" cy="51" r="1.5" fill="white"/>
+          <!-- Chest detail -->
+          <rect x="88" y="88" width="24" height="3" rx="1" fill="rgba(255,70,85,0.5)"/>
+          <rect x="88" y="95" width="16" height="2" rx="1" fill="rgba(255,70,85,0.3)"/>
+          <!-- Agent number -->
+          <text x="100" y="118" text-anchor="middle" font-family="Orbitron" font-size="9" fill="rgba(255,255,255,0.5)" font-weight="700">DINO</text>
+        </svg>
+      </div>
+      <div class="agent-meta">
+        <div class="agent-name-row">
+          <span class="agent-name-label">Neon / Tejo</span>
+          <span class="agent-role">Duelist</span>
+        </div>
+        <div class="agent-abilities">
+          <span class="ability-chip">Fast Lane</span>
+          <span class="ability-chip">Relay Bolt</span>
+          <span class="ability-chip">High Gear</span>
+          <span class="ability-chip">Overdrive</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <span class="scroll-text">Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- PHYSIOLOGY -->
+<section id="physiology">
+  <div class="section-header reveal">
+    <span class="section-number">// 01</span>
+    <h2 class="section-title">Physiology & Bio</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <!-- Body measurements card -->
+  <div class="physio-body-card reveal">
+    <div class="body-diagram">
+      <svg viewBox="0 0 180 280" xmlns="http://www.w3.org/2000/svg" width="180">
+        <defs>
+          <filter id="neonBody">
+            <feGaussianBlur stdDeviation="2" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <!-- Shadow -->
+        <ellipse cx="90" cy="270" rx="40" ry="6" fill="rgba(255,70,85,0.15)"/>
+        <!-- Legs -->
+        <rect x="60" y="185" width="24" height="75" rx="8" fill="rgba(255,70,85,0.15)" stroke="#ff4655" stroke-width="1"/>
+        <rect x="96" y="185" width="24" height="75" rx="8" fill="rgba(255,70,85,0.15)" stroke="#ff4655" stroke-width="1"/>
+        <!-- Body -->
+        <rect x="45" y="95" width="90" height="96" rx="12" fill="rgba(255,70,85,0.1)" stroke="#ff4655" stroke-width="1.5" filter="url(#neonBody)"/>
+        <!-- Arms -->
+        <rect x="20" y="98" width="25" height="74" rx="8" fill="rgba(255,70,85,0.1)" stroke="#ff4655" stroke-width="1" transform="rotate(4 32 135)"/>
+        <rect x="135" y="98" width="25" height="74" rx="8" fill="rgba(255,70,85,0.1)" stroke="#ff4655" stroke-width="1" transform="rotate(-4 148 135)"/>
+        <!-- Head -->
+        <circle cx="90" cy="60" r="36" fill="rgba(255,70,85,0.1)" stroke="#ff4655" stroke-width="1.5" filter="url(#neonBody)"/>
+        <!-- Measurement lines -->
+        <line x1="10" y1="95" x2="10" y2="260" stroke="rgba(255,70,85,0.3)" stroke-width="0.5" stroke-dasharray="3,3"/>
+        <line x1="8" y1="95" x2="12" y2="95" stroke="rgba(255,70,85,0.5)" stroke-width="1"/>
+        <line x1="8" y1="260" x2="12" y2="260" stroke="rgba(255,70,85,0.5)" stroke-width="1"/>
+        <text x="5" y="180" font-family="Share Tech Mono" font-size="7" fill="rgba(255,70,85,0.5)" transform="rotate(-90 5 180)">185 cm</text>
+        <!-- Cross indicators -->
+        <circle cx="90" cy="60" r="3" fill="#ff4655"/>
+        <circle cx="90" cy="143" r="3" fill="#ff4655"/>
+        <circle cx="45" cy="143" r="3" fill="#ff4655"/>
+        <circle cx="135" cy="143" r="3" fill="#ff4655"/>
+      </svg>
+    </div>
+    <div class="body-stats-list">
+      <div class="body-stat-item">
+        <span class="bsi-name">Height</span>
+        <div class="bsi-bar"><div class="bsi-bar-fill" data-pct="80"></div></div>
+        <span class="bsi-val">185 cm</span>
+      </div>
+      <div class="body-stat-item">
+        <span class="bsi-name">Weight</span>
+        <div class="bsi-bar"><div class="bsi-bar-fill" data-pct="65"></div></div>
+        <span class="bsi-val">74 kg</span>
+      </div>
+      <div class="body-stat-item">
+        <span class="bsi-name">Body Type</span>
+        <div class="bsi-bar"><div class="bsi-bar-fill" data-pct="75"></div></div>
+        <span class="bsi-val">Ectomorph</span>
+      </div>
+      <div class="body-stat-item">
+        <span class="bsi-name">Reaction Time</span>
+        <div class="bsi-bar"><div class="bsi-bar-fill" data-pct="88"></div></div>
+        <span class="bsi-val">162 ms</span>
+      </div>
+      <div class="body-stat-item">
+        <span class="bsi-name">Hand Speed</span>
+        <div class="bsi-bar"><div class="bsi-bar-fill" data-pct="92"></div></div>
+        <span class="bsi-val">Elite Tier</span>
+      </div>
+      <div class="body-stat-item">
+        <span class="bsi-name">Dominant Hand</span>
+        <div class="bsi-bar"><div class="bsi-bar-fill" data-pct="50"></div></div>
+        <span class="bsi-val">Right</span>
+      </div>
+      <div class="body-stat-item">
+        <span class="bsi-name">Eye Dominance</span>
+        <div class="bsi-bar"><div class="bsi-bar-fill" data-pct="50"></div></div>
+        <span class="bsi-val">Right</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="physio-grid">
+    <div class="physio-card reveal">
+      <svg class="physio-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24 4C24 4 14 10 10 20C6 30 10 40 24 44C38 40 42 30 38 20C34 10 24 4 24 4Z" stroke="currentColor" stroke-width="2" fill="none"/>
+        <path d="M16 26C16 26 18 32 24 34C30 32 32 26 32 26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="20" cy="22" r="2" fill="currentColor"/>
+        <circle cx="28" cy="22" r="2" fill="currentColor"/>
+      </svg>
+      <div class="physio-card-title">Stamina & Endurance</div>
+      <div class="physio-card-value">VO₂: 62</div>
+      <div class="physio-card-desc">Peak cardiovascular fitness supporting long tournament sessions. Asher maintains elite oxygen uptake comparable to professional esports athletes, enabling sharp focus for 8+ hour play sessions with minimal cognitive decline.</div>
+    </div>
+
+    <div class="physio-card reveal">
+      <svg class="physio-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 36L8 40M36 12L40 8M12 12L8 8M36 36L40 40" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="24" cy="24" r="10" stroke="currentColor" stroke-width="2"/>
+        <circle cx="24" cy="24" r="4" fill="currentColor"/>
+        <line x1="24" y1="8" x2="24" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <line x1="24" y1="34" x2="24" y2="40" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div class="physio-card-title">Visual Acuity</div>
+      <div class="physio-card-value">20/15 Vision</div>
+      <div class="physio-card-desc">Superior visual resolution enabling precise target acquisition at long ranges. Monitors at 240Hz — Asher's eyes capture motion at 300+ FPS effective refresh, critical for micro-adjustments on Vandal spray patterns.</div>
+    </div>
+
+    <div class="physio-card reveal">
+      <svg class="physio-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24 6V18M24 30V42M6 24H18M30 24H42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M14 14L22 22M26 26L34 34M34 14L26 22M22 26L14 34" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+        <circle cx="24" cy="24" r="6" stroke="currentColor" stroke-width="2"/>
+      </svg>
+      <div class="physio-card-title">Cognitive Processing</div>
+      <div class="physio-card-value">IQ: 138</div>
+      <div class="physio-card-desc">High-speed tactical decision-making within 200ms windows. Pattern recognition allows pre-cognition of enemy movement paths. Split-second utility usage timing reflects exceptional working memory capacity and spatial intelligence.</div>
+    </div>
+
+    <div class="physio-card reveal">
+      <svg class="physio-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 24C8 24 12 16 20 14C26 12 30 16 30 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M18 14C18 14 22 6 28 8C34 10 34 18 30 20C26 22 20 20 20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M30 20C30 20 38 18 40 24C42 30 36 36 28 34C22 32 20 26 20 26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M20 26C20 26 16 34 20 38C24 42 32 40 34 36" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div class="physio-card-title">Neural Reflexes</div>
+      <div class="physio-card-value">162 ms</div>
+      <div class="physio-card-desc">Reaction time measured in controlled benchmark tests. Fast-twitch neural pathways honed through years of competitive play. Flick shots executed with sub-200ms response — placing Asher in the top 3% of reaction-time benchmarks globally.</div>
+    </div>
+
+    <div class="physio-card reveal">
+      <svg class="physio-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14 34C14 34 12 28 16 22C20 16 28 14 32 18C36 22 34 30 30 34C26 38 18 38 14 34Z" stroke="currentColor" stroke-width="2"/>
+        <path d="M20 24L24 28L32 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="physio-card-title">Hand Precision</div>
+      <div class="physio-card-value">98.4% Acc.</div>
+      <div class="physio-card-desc">Micro-tremor control trained through low-sens precision drills. Mouse DPI set at 800 with in-game sensitivity 0.35 for maximum granular control. Wrist-to-shoulder motion isolation allows consistent sub-pixel crosshair placement.</div>
+    </div>
+
+    <div class="physio-card reveal">
+      <svg class="physio-icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="18" width="28" height="18" rx="4" stroke="currentColor" stroke-width="2"/>
+        <path d="M18 18V14C18 11 22 8 24 8C26 8 30 11 30 14V18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="24" cy="27" r="3" fill="currentColor"/>
+        <line x1="24" y1="30" x2="24" y2="33" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div class="physio-card-title">Mental Fortitude</div>
+      <div class="physio-card-value">Clutch: 68%</div>
+      <div class="physio-card-desc">Psychological pressure resilience under 1vX scenarios. Cortisol regulation allows calm performance in decisive rounds. Win-rate in pistol rounds exceeds 72%, demonstrating exceptional composure during high-economy stress moments.</div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="section-header reveal">
+    <span class="section-number">// 02</span>
+    <h2 class="section-title">Performance Stats</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="stats-grid reveal">
+    <div class="perf-stat" data-tip="Average Combat Score — all time">
+      <span class="perf-val">218.5</span>
+      <span class="perf-lbl">Avg ACS</span>
+    </div>
+    <div class="perf-stat">
+      <span class="perf-val">1.08</span>
+      <span class="perf-lbl">K/D Ratio</span>
+    </div>
+    <div class="perf-stat">
+      <span class="perf-val">148</span>
+      <span class="perf-lbl">Avg ADR</span>
+    </div>
+    <div class="perf-stat">
+      <span class="perf-val">71%</span>
+      <span class="perf-lbl">KAST Rate</span>
+    </div>
+    <div class="perf-stat">
+      <span class="perf-val">0.76</span>
+      <span class="perf-lbl">KPR</span>
+    </div>
+    <div class="perf-stat">
+      <span class="perf-val">0.12</span>
+      <span class="perf-lbl">FKPR</span>
+    </div>
+  </div>
+
+  <!-- Recent matches -->
+  <h3 class="reveal" style="font-family:'Orbitron',sans-serif;font-size:0.8rem;letter-spacing:0.25em;color:var(--valo-red);text-transform:uppercase;margin-bottom:16px;">Recent Match History</h3>
+  <div class="reveal" style="overflow-x:auto;">
+  <table class="matches-table">
+    <thead>
+      <tr>
+        <th>Result</th>
+        <th>Event</th>
+        <th>Agent</th>
+        <th>Score</th>
+        <th>ACS</th>
+        <th>K/D</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="match-result-l">LOSS</span></td>
+        <td>FunhaverGG 2026 WILD//WEST Q4</td>
+        <td><span class="match-agent-badge">🔴 NEON</span></td>
+        <td>0 : 2</td>
+        <td>204</td>
+        <td>0.91</td>
+        <td>2026/03/13</td>
+      </tr>
+      <tr>
+        <td><span class="match-result-l">LOSS</span></td>
+        <td>FunhaverGG 2026 WILD//WEST Q4</td>
+        <td><span class="match-agent-badge">🔴 NEON</span></td>
+        <td>0 : 2</td>
+        <td>198</td>
+        <td>0.88</td>
+        <td>2026/03/13</td>
+      </tr>
+      <tr>
+        <td><span class="match-result-w">WIN</span></td>
+        <td>FunhaverGG Mad Science SABOTAGE</td>
+        <td><span class="match-agent-badge">🟡 TEJO</span></td>
+        <td>2 : 1</td>
+        <td>222</td>
+        <td>1.08</td>
+        <td>2025/12/13</td>
+      </tr>
+      <tr>
+        <td><span class="match-result-l">LOSS</span></td>
+        <td>FunhaverGG Mad Science SABOTAGE</td>
+        <td><span class="match-agent-badge">🟡 TEJO</span></td>
+        <td>0 : 2</td>
+        <td>218</td>
+        <td>1.05</td>
+        <td>2025/12/13</td>
+      </tr>
+      <tr>
+        <td><span class="match-result-l">LOSS</span></td>
+        <td>FunhaverGG Mad Science SABOTAGE</td>
+        <td><span class="match-agent-badge">🔵 YORU</span></td>
+        <td>0 : 2</td>
+        <td>132</td>
+        <td>0.58</td>
+        <td>2025/12/13</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- SKILLS / ABILITIES -->
+<section id="skills">
+  <div class="section-header reveal">
+    <span class="section-number">// 03</span>
+    <h2 class="section-title">Agent Abilities</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="skills-grid">
+    <div class="skill-card reveal" data-key="C">
+      <span class="skill-key">C KEY</span>
+      <div class="skill-name">Fast Lane</div>
+      <div class="skill-desc">Send out two energy lines forward along the floor that explode into walls of static electricity. The walls damage enemies who pass through them — Asher uses this to isolate sites and force duels on his terms.</div>
+      <div class="skill-meter"><div class="skill-meter-fill" data-pct="78"></div></div>
+    </div>
+
+    <div class="skill-card reveal" data-key="Q">
+      <span class="skill-key">Q KEY</span>
+      <div class="skill-name">Relay Bolt</div>
+      <div class="skill-desc">Throw an energy bolt that bounces off surfaces, concussing all players in its explosion radius. Asher chains off walls to clear angles before peeking, maintaining unpredictable approach trajectories.</div>
+      <div class="skill-meter"><div class="skill-meter-fill" data-pct="85"></div></div>
+    </div>
+
+    <div class="skill-card reveal" data-key="E">
+      <span class="skill-key">E KEY</span>
+      <div class="skill-name">High Gear</div>
+      <div class="skill-desc">Channel Neon's power to charge and move at high speed. Reach peak velocity instantly, enabling aggressive re-take entries. While active, the power bar regenerates energy at full sprint speed.</div>
+      <div class="skill-meter"><div class="skill-meter-fill" data-pct="96"></div></div>
+    </div>
+
+    <div class="skill-card reveal" data-key="X">
+      <span class="skill-key">ULTIMATE</span>
+      <div class="skill-name">Overdrive</div>
+      <div class="skill-desc">Unleash Neon's full power — channel maximum speed and fire a lightning beam with high accuracy. The beam can be refocused rapidly between targets. Kills reset duration. Asher's signature 1v3 tool in clutch scenarios.</div>
+      <div class="skill-meter"><div class="skill-meter-fill" data-pct="92"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ACHIEVEMENTS -->
+<section id="achievements">
+  <div class="section-header reveal">
+    <span class="section-number">// 04</span>
+    <h2 class="section-title">Achievements</h2>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="achievement-list">
+    <div class="achievement-item reveal">
+      <div class="ach-icon">🏆</div>
+      <div>
+        <div class="ach-title">Top 3% Reaction Time — Benchmark Global</div>
+        <div class="ach-desc">162ms average reaction — certified by Humanbenchmark competitive leaderboard</div>
+      </div>
+      <span class="ach-date">2025</span>
+    </div>
+    <div class="achievement-item reveal">
+      <div class="ach-icon">🎯</div>
+      <div>
+        <div class="ach-title">Diamond II Competitive Rank — Achieved</div>
+        <div class="ach-desc">Ranked gameplay consistency across 600+ rounds in North America server</div>
+      </div>
+      <span class="ach-date">2026</span>
+    </div>
+    <div class="achievement-item reveal">
+      <div class="ach-icon">⚡</div>
+      <div>
+        <div class="ach-title">FunhaverGG Tournament — Qualifier Participant</div>
+        <div class="ach-desc">Competed in WILD//WEST Qualifier 4 — 2026 season open circuit</div>
+      </div>
+      <span class="ach-date">2026/03</span>
+    </div>
+    <div class="achievement-item reveal">
+      <div class="ach-icon">🦖</div>
+      <div>
+        <div class="ach-title">Highest Single-Match ACS — 268</div>
+        <div class="ach-desc">Personal best combat score achieved on Neon/Bind — competitive match</div>
+      </div>
+      <span class="ach-date">2025</span>
+    </div>
+    <div class="achievement-item reveal">
+      <div class="ach-icon">🔥</div>
+      <div>
+        <div class="ach-title">9-Round Win Streak — FunhaverGG Mad Science</div>
+        <div class="ach-desc">Dominant half-side run with sneaky pekka — entry frag efficiency 100%</div>
+      </div>
+      <span class="ach-date">2025/12</span>
+    </div>
+    <div class="achievement-item reveal">
+      <div class="ach-icon">💰</div>
+      <div>
+        <div class="ach-title">$200 Prize Earnings — Verified</div>
+        <div class="ach-desc">Tournament winnings across FunhaverGG open circuit events (vlr.gg verified)</div>
+      </div>
+      <span class="ach-date">2025–2026</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Asher//dino</div>
+  <span class="footer-copy">© 2026 · All data sourced from VLR.GG</span>
+  <ul class="footer-links">
+    <li><a href="https://www.vlr.gg/player/32157/dino" target="_blank">VLR.GG Profile</a></li>
+    <li><a href="#hero">Back to Top</a></li>
+  </ul>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const cursorDot = document.getElementById('cursorDot');
+  let mx = 0, my = 0, cx = 0, cy = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursorDot.style.left = mx + 'px';
+    cursorDot.style.top = my + 'px';
+  });
+
+  function animateCursor() {
+    cx += (mx - cx) * 0.15;
+    cy += (my - cy) * 0.15;
+    cursor.style.left = cx + 'px';
+    cursor.style.top = cy + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  document.querySelectorAll('a, button, .hero-stat, .physio-card, .skill-card, .achievement-item, .perf-stat, .btn, .agent-card').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+  });
+
+  // Intersection Observer for reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Bar fill animation
+  const barObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.bsi-bar-fill, .skill-meter-fill').forEach(bar => {
+          const pct = bar.getAttribute('data-pct');
+          setTimeout(() => { bar.style.width = pct + '%'; }, 300);
+        });
+        barObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.physio-body-card, .skill-card').forEach(el => barObserver.observe(el));
+
+  // Nav active state
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 100) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current ? 'var(--valo-red)' : '';
+    });
+  });
+
+  // Typing effect on hero tag
+  const tag = document.querySelector('.hero-tag');
+  if (tag) {
+    const text = tag.textContent;
+    tag.textContent = '';
+    let i = 0;
+    const type = () => {
+      if (i < text.length) {
+        tag.textContent += text[i++];
+        setTimeout(type, 55);
+      }
+    };
+    setTimeout(type, 400);
+  }
+
+  // Parallax on hero
+  document.addEventListener('mousemove', e => {
+    const agent = document.querySelector('.hero-agent');
+    if (!agent) return;
+    const xRot = (e.clientY / window.innerHeight - 0.5) * 8;
+    const yRot = (e.clientX / window.innerWidth - 0.5) * -8;
+    agent.querySelector('.agent-card').style.transform = `translateY(-50%) rotateX(${xRot}deg) rotateY(${yRot}deg)`;
+  });
+</script>
+</body>
+</html>
